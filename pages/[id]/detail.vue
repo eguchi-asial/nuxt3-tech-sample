@@ -4,13 +4,19 @@
   {{ detail }}
 </template>
 <script lang="ts" setup>
+import { DetailResponse } from '~~/types/app';
+
 definePageMeta({ middleware: 'id-check' })
 
 const title = '詳細'
 const id = useRoute().params.id
 // 画面ロジックはcomposablesから全て取得する
-const detail = await useFetchDetail(Number(id))
-console.log('ssでは存在するのに、clientで存在しない = Hydration text mismatch', detail)
-// ss onlyな情報はuseStateで「サーバサイドで組み立てた情報をクライアント側にも共有する」としないとHydration mismatchが発生する
+// composablesはss/cs両方から評価されるが、runtimeConfigのkeyはprivateとしているため、ssのみで評価させたい
+// これがないとcsでもAPIコールが実行されるが、環境変数apihost keyがundefinedとなる
+if (process.server) {
+  const detailResponse: DetailResponse | undefined = await useFetchDetail(Number(id))
+  useDetailState(detailResponse)
+}
+const detail = useState(STATE_KEYS.KEY_DETAIL)
 
 </script>

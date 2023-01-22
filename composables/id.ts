@@ -9,6 +9,6 @@ export const useFetchDetail = async (id: number) => {
       console.info(`@@@ API callled: ${requestUrl}`)
     }
   })
-  if (!data) return {}
-  return unref(data) || {}
+  if (!data) return undefined
+  return unref(data) || undefined
 }
