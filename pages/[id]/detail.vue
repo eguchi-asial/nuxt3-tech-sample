@@ -15,7 +15,6 @@ const id = useRoute().params.id
 // これがないとcsでもAPIコールが実行されるが、環境変数apihost keyがundefinedとなる
 if (process.server) {
   const detailResponse: DetailResponse | undefined = await useFetchDetail(Number(id))
-  useDetailState(detailResponse)
 }
 const detail = useState(STATE_KEYS.KEY_DETAIL)
 
